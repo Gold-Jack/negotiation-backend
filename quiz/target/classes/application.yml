@@ -1,0 +1,29 @@
+server:
+  port: 8888
+
+universal:
+  host: 43.142.14.211
+
+spring:
+  datasource:
+    url: jdbc:mysql:///negotiation?serverTimeZone=GMT%2b8&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: quiz-service
+  cloud:
+    nacos:
+      server-addr: ${universal.host}:8848
+  rabbitmq:
+    host: ${universal.host} # rabbitMQ的ip地址
+    port: 5672 # 端口
+    username: root
+    password: admin
+    virtual-host: /
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0   # 逻辑删除

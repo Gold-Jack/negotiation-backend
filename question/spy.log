@@ -1,0 +1,4 @@
+1660795075137|10|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/negotiation?serverTimeZone=UTC&useUnicode=true&characterEncoding=UTF-8|show table status WHERE 1=1  AND NAME IN ('question')|show table status WHERE 1=1  AND NAME IN ('question')
+1660795075152|1|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/negotiation?serverTimeZone=UTC&useUnicode=true&characterEncoding=UTF-8|show full fields from `question`|show full fields from `question`
+1660797254894|9|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/negotiation?serverTimeZone=UTC&useUnicode=true&characterEncoding=UTF-8|show table status WHERE 1=1  AND NAME IN ('question')|show table status WHERE 1=1  AND NAME IN ('question')
+1660797254910|1|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/negotiation?serverTimeZone=UTC&useUnicode=true&characterEncoding=UTF-8|show full fields from `question`|show full fields from `question`

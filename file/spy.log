@@ -1,0 +1,4 @@
+1660797003101|11|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/negotiation?serverTimeZone=UTC&useUnicode=true&characterEncoding=UTF-8|show table status WHERE 1=1  AND NAME IN ('file')|show table status WHERE 1=1  AND NAME IN ('file')
+1660797003117|1|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/negotiation?serverTimeZone=UTC&useUnicode=true&characterEncoding=UTF-8|show full fields from `file`|show full fields from `file`
+1660798695445|9|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/negotiation?serverTimeZone=UTC&useUnicode=true&characterEncoding=UTF-8|show table status WHERE 1=1  AND NAME IN ('file')|show table status WHERE 1=1  AND NAME IN ('file')
+1660798695460|1|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/negotiation?serverTimeZone=UTC&useUnicode=true&characterEncoding=UTF-8|show full fields from `file`|show full fields from `file`

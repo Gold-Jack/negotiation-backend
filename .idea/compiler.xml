@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="quiz" />
+        <module name="file" />
+        <module name="common" />
+        <module name="question" />
+        <module name="user" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="analysis" target="18" />
+      <module name="api-gateway" target="18" />
+      <module name="base" target="18" />
+      <module name="facade" target="18" />
+      <module name="gateway" target="13" />
+      <module name="login" target="13" />
+      <module name="security" target="13" />
+      <module name="service" target="13" />
+      <module name="service-analysis" target="18" />
+      <module name="service-negotiation" target="13" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-gateway" options="-parameters" />
+      <module name="base" options="-parameters" />
+      <module name="common" options="-parameters" />
+      <module name="file" options="-parameters" />
+      <module name="gateway" options="-parameters" />
+      <module name="login" options="-parameters" />
+      <module name="question" options="-parameters" />
+      <module name="quiz" options="-parameters" />
+      <module name="security" options="-parameters" />
+      <module name="service-analysis" options="-parameters" />
+      <module name="service-negotiation" options="-parameters" />
+      <module name="user" options="-parameters" />
+    </option>
+  </component>
+</project>
