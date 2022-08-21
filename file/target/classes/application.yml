@@ -1,8 +1,12 @@
 server:
   port: 8888
 
-universal:
-  host: 43.142.14.211
+registry:
+  host: 43.142.14.211   # 微服务配置的地址（nacos配置中心，rabbitMQ等）
+
+project:
+  deployment:
+    host: localhost
 
 spring:
   datasource:
@@ -14,13 +18,18 @@ spring:
     name: file-service
   cloud:
     nacos:
-      server-addr: ${universal.host}:8848
+      server-addr: ${registry.host}:8848
   rabbitmq:
-    host: ${universal.host} # rabbitMQ的ip地址
+    host: ${registry.host} # rabbitMQ的ip地址
     port: 5672 # 端口
     username: root
     password: admin
     virtual-host: /
+  servlet:
+    multipart:
+      enabled: true     # 开启multipart的配置
+      max-file-size: 100MB      # 单个文件的大小
+      max-request-size: 100MB   # 总上传的数据大小
 
 mybatis-plus:
   global-config:

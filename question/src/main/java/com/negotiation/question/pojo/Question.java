@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>
@@ -17,8 +18,9 @@ import lombok.Setter;
  * @author Gold_Jack
  * @since 2022-08-18
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "Question对象", description = "题目表")
 public class Question implements Serializable {
 
@@ -37,8 +39,8 @@ public class Question implements Serializable {
     @ApiModelProperty("题目描述")
     private String description;
 
-    @ApiModelProperty("题目内容（文件）以url的形式存储在数据库中")
-    private String contentUrl;
+    @ApiModelProperty("题目内容（文件）")
+    private String questionContentUrl;
 
     @ApiModelProperty("评分规则 - 当前版本只给一个选项或关键词")
     private String rule;
@@ -49,6 +51,9 @@ public class Question implements Serializable {
     @ApiModelProperty("题目发布人")
     private String publisher;
 
+    @ApiModelProperty("预计答题时间（单位：分钟）")
+    private Integer estimatedTimeCost;
+
     @ApiModelProperty("创建日期")
     private Date gmtCreate;
 
@@ -56,6 +61,7 @@ public class Question implements Serializable {
     private Date gmtModified;
 
     @ApiModelProperty("逻辑删除")
+    @TableLogic
     private Integer isDeleted;
 
 

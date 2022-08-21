@@ -4,6 +4,7 @@ import com.negotiation.quiz.pojo.QuizResult;
 import com.negotiation.quiz.mapper.QuizResultMapper;
 import com.negotiation.quiz.service.IQuizResultService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
  * @since 2022-08-18
  */
 @Service
+@Primary
 public class QuizResultServiceImpl extends ServiceImpl<QuizResultMapper, QuizResult> implements IQuizResultService {
 
 }

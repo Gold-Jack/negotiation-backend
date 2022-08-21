@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,8 +44,11 @@ public class LocalFile implements Serializable {
     @ApiModelProperty("文件md5码")
     private String md5;
 
-    @ApiModelProperty("文件url")
-    private String fileUrl;
+    @ApiModelProperty("文件uuid")
+    private String fileUuid;
+
+    @ApiModelProperty("文件下载url")
+    private String downloadUrl;
 
     @ApiModelProperty("文件是否可用：默认1可用")
     private Integer isEnable;
@@ -56,6 +60,7 @@ public class LocalFile implements Serializable {
     private Date gmtModified;
 
     @ApiModelProperty("逻辑删除 默认0 未删除")
+    @TableLogic
     private Integer isDeleted;
 
 

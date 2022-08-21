@@ -20,6 +20,7 @@
         <module>user</module>
         <module>file</module>
         <module>quiz</module>
+        <module>analysis</module>
     </modules>
 
     <properties>

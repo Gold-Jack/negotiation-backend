@@ -2,6 +2,7 @@ package com.negotiation.user.service;
 
 import com.negotiation.user.pojo.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**

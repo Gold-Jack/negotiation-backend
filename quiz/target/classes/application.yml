@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8083
 
 universal:
   host: 43.142.14.211

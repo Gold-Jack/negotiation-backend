@@ -4,6 +4,7 @@ import com.negotiation.question.pojo.Question;
 import com.negotiation.question.mapper.QuestionMapper;
 import com.negotiation.question.service.IQuestionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
  * @since 2022-08-18
  */
 @Service
+@Primary
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements IQuestionService {
 
 }

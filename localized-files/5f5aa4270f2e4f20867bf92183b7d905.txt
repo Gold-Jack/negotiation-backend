@@ -1,0 +1,90 @@
+/** 文件管理表 **/
+create table file
+(
+    file_id      int auto_increment comment '文件ID',
+    filename     varchar(255) null comment '文件名称',
+    file_type    varchar(255) null comment '文件类型（后缀名）',
+    file_size    double       null comment '文件大小（单位：kb）',
+    md5 varchar(255) null comment '文件md5码',
+    file_url     varchar(255) null comment '文件url',
+    is_enable int default 1 comment '文件是否可用：默认1可用',
+    gmt_create   datetime     null comment '文件创建时间',
+    gmt_modified datetime     null comment '文件修改或更新时间',
+    is_deleted   int    default 0   comment '逻辑删除 默认0 未删除',
+    constraint file_pk
+        primary key (file_id)
+)
+    comment '文件管理表';
+
+/** 用户信息表 **/
+create table user
+(
+    user_id int auto_increment comment '用户ID',
+    username varchar(255) null comment '用户名',
+    password varchar(255) null comment '密码',
+    nickname varchar(255) null comment '昵称',
+    avatar_url varchar(255) null comment '用户头像',
+    quiz_finished_id varchar(255) null comment '已经做过的测验',
+    quiz_result_id varchar(255) null comment '测验结果ID',
+    authority varchar(255) null comment '用户权限',
+    age int null comment '年龄',
+    sex varchar(10) null comment '性别',
+    profession varchar(255) null comment '职业',
+    token varchar(255) null comment '登陆验证token',
+    gmt_create   datetime     null comment '文件创建时间',
+    gmt_modified datetime     null comment '文件修改或更新时间',
+    is_deleted   int    default 0   comment '逻辑删除',
+    constraint user_pk primary key (user_id)
+)
+    comment '用户信息表';
+
+/** 题目表 **/
+create table qustion
+(
+	question_id int auto_increment comment '题目ID',
+	type varchar(255) null comment '题目类型',
+	judging_ability varchar(255) null comment '本题评价的能力',
+	description varchar(255) null comment '题目描述',
+	content_url varchar(255) null comment '题目内容，以url形式存储',
+	rule varchar(255) null comment '评分规则 - 当前版本只给一个选项或关键词',
+	creator varchar(255) null comment '题目创建人',
+	publisher varchar(255) null comment '题目发布人',
+	gmt_create   datetime     null comment '题目创建时间',
+	gmt_modified datetime     null comment '题目修改或更新时间',
+	is_deleted   int    default 0   comment '逻辑删除',
+	constraint question_pk primary key (question_id)
+) comment '题目表';
+
+/** 测验表 **/
+create table quiz
+(
+	quiz_id int auto_increment,
+	quizname varchar(255),
+	description varchar(255),
+	question_list varchar(255),
+	quiz_done_number int default 0,
+	creator varchar(255),
+	publisher varchar(255),
+	gmt_publish datetime,
+	quiz_duration int,
+	is_publish int default 0,
+	is_off int default 0,
+	gmt_create datetime,
+	gmt_modified datetime,
+	is_deleted int default 0,
+	constraint quiz_pk primary key (quiz_id)
+);
+
+/** 测验结果表 **/
+create table quiz_result
+(
+	result_id int auto_increment,
+	quiz_id int,
+	expression_ability double,
+	observation_ability double,
+	negotiaion_ability double,
+	gmt_create datetime,
+	gmt_modified datetime,
+	is_deleted int default 0,
+	constraint quiz_result_pk primary key (result_id)
+);

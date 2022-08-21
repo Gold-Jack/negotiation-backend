@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication
-@EnableFeignClients(basePackages = "com.negotiation.question.feign")
+@SpringBootApplication(scanBasePackages = {"com.negotiation.question", "com.negotiation.common"})
+@EnableFeignClients(basePackages = {"com.negotiation.question.feign"})
 @EnableDiscoveryClient
 @MapperScan("com.negotiation.question.mapper")
 public class QuestionApplication {

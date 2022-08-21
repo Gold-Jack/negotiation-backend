@@ -2,6 +2,7 @@ package com.negotiation.quiz.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
@@ -51,6 +52,7 @@ public class QuizResult implements Serializable {
     private Date gmtModified;
 
     @ApiModelProperty("逻辑删除")
+    @TableLogic
     private Integer isDeleted;
 
 

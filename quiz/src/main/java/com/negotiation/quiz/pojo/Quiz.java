@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -37,7 +40,10 @@ public class Quiz implements Serializable {
     private String description;
 
     @ApiModelProperty("题目ID列表")
-    private String questionList;
+    private String questionIdList;
+
+    @ApiModelProperty("题目对象列表（不存入数据库）")
+    private List<Object> questionObjList;
 
     @ApiModelProperty("已参加测试的人数")
     private Integer quizDoneNumber;
@@ -52,7 +58,7 @@ public class Quiz implements Serializable {
     private Date gmtPublish;
 
     @ApiModelProperty("测试预计时长（单位：分钟）")
-    private Integer quizDuration;
+    private Integer estimatedTimeCost;
 
     @ApiModelProperty("测试是否被发布")
     private Integer isPublish;
@@ -67,6 +73,7 @@ public class Quiz implements Serializable {
     private Date gmtModified;
 
     @ApiModelProperty("逻辑删除")
+    @TableLogic
     private Integer isDeleted;
 
 

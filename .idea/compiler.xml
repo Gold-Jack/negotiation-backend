@@ -9,13 +9,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="quiz" />
         <module name="file" />
-        <module name="common" />
         <module name="question" />
+        <module name="analysis" />
         <module name="user" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="analysis" target="18" />
       <module name="api-gateway" target="18" />
       <module name="base" target="18" />
       <module name="facade" target="18" />
@@ -29,6 +28,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="analysis" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
       <module name="base" options="-parameters" />
       <module name="common" options="-parameters" />
