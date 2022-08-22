@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -48,6 +49,56 @@ public class FileController {
     @Autowired
     @Qualifier("fileServiceImpl")
     private IFileService fileService;
+
+    /**
+     * 文件下载
+     * @param fileUuid  文件唯一标识码
+     * @param response  后端响应，此处封装字节流
+     * @return 文件本身
+     * @throws IOException
+     */
+    @GetMapping("/download/{fileUuid}")
+    public R download(@PathVariable String fileUuid,
+                      HttpServletResponse response) throws IOException {
+        // 根据文件唯一标识码获取文件
+        File targetFile = new File(globalFileUploadPath + fileUuid);
+        // 设置输出流格式
+        ServletOutputStream os = response.getOutputStream();
+        response.addHeader("Content-Disposition", "attachment; filename=" + URLDecoder.decode(fileUuid, StandardCharsets.UTF_8));
+        response.setContentType("application/octet-stream");
+
+        // 读取文件的字节流
+        os.write(FileUtil.readBytes(targetFile));
+        os.flush();
+        os.close();
+        return R.success();
+    }
+
+
+    /**
+     * 通过downloadUrl获取文件的uuid
+     * @param downloadUrl 文件下载url
+     * @return 文件的uuid
+     */
+    @GetMapping("/get-uuid")
+    public R getFileUuidByUrl(@RequestParam String downloadUrl) {
+        String[] urlList = downloadUrl.split("/");
+        String fileUuid = urlList[urlList.length - 1];
+        return R.success(fileUuid);         // TODO 暂时不知道这里会有什么error
+    }
+
+    /**
+     * 通过downloadUrl获取文件类型
+     * @param downloadUrl
+     * @return 文件类型（小写）
+     */
+    @GetMapping("/get-type")
+    public R getFileType(@RequestParam String downloadUrl) {
+        List<String> split = StrUtil.split(downloadUrl, ".");
+        String fileType = split.get(split.size() - 1).toLowerCase();
+        return R.success(fileType);
+    }
+
 
     /**
      * 文件上传控制
@@ -103,43 +154,6 @@ public class FileController {
         fileService.save(toSaveFile);
 
         return R.success(downloadUrl);
-    }
-
-    /**
-     * 文件下载
-     * @param fileUuid  文件唯一标识码
-     * @param response  后端响应，此处封装字节流
-     * @return 文件本身
-     * @throws IOException
-     */
-    @GetMapping("/download/{fileUuid}")
-    public R download(@PathVariable String fileUuid,
-                           HttpServletResponse response) throws IOException {
-        // 根据文件唯一标识码获取文件
-        File targetFile = new File(globalFileUploadPath + fileUuid);
-        // 设置输出流格式
-        ServletOutputStream os = response.getOutputStream();
-        response.addHeader("Content-Disposition", "attachment; filename=" + URLDecoder.decode(fileUuid, StandardCharsets.UTF_8));
-        response.setContentType("application/octet-stream");
-
-        // 读取文件的字节流
-        os.write(FileUtil.readBytes(targetFile));
-        os.flush();
-        os.close();
-        return R.success();
-    }
-
-
-    /**
-     * 通过downloadUrl获取文件的uuid
-     * @param downloadUrl 文件下载url
-     * @return 文件的uuid
-     */
-    @GetMapping("/get-uuid")
-    public R getFileUuidByUrl(@RequestParam String downloadUrl) {
-        String[] urlList = downloadUrl.split("/");
-        String fileUuid = urlList[urlList.length - 1];
-        return R.success(fileUuid);         // TODO 暂时不知道这里会有什么error
     }
 
 }

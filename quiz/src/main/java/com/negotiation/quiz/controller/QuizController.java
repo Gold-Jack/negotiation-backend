@@ -1,5 +1,6 @@
 package com.negotiation.quiz.controller;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -8,6 +9,7 @@ import com.negotiation.common.util.R;
 import com.negotiation.quiz.feign.QuestionFeignService;
 import com.negotiation.quiz.pojo.Quiz;
 import com.negotiation.quiz.service.IQuizService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.negotiation.common.util.ResponseCode.CODE_311;
 import static com.negotiation.common.util.ResponseCode.CODE_314;
 
 /**
@@ -34,6 +37,25 @@ public class QuizController {
     @Autowired
     private QuestionFeignService questionFeignService;
 
+    @ApiOperation("通过quizId获取quiz信息")
+    @GetMapping("/get/{quizId}")
+    public R getById(@PathVariable Integer quizId) {
+        Quiz quizById = quizService.getById(quizId);
+        if (quizById == null) {
+            return R.error(CODE_311, CODE_311.getCodeMessage());
+        }
+        return R.success(quizById);
+    }
+
+    @ApiOperation("获取所有已发布的quiz")
+    @GetMapping("/getAllPublishedQuiz")
+    public R getAllPublishedQuiz() {
+        final Integer IS_PUBLISH = 1;
+        List<Quiz> publishedQuizList = quizService.list(
+                Wrappers.<Quiz>lambdaQuery().eq(Quiz::getIsPublish, IS_PUBLISH));
+        return R.success(publishedQuizList);
+    }
+
 
     /**
      * 分页读取quiz
@@ -42,6 +64,7 @@ public class QuizController {
      * @param search 搜索内容 默认：'' （暂时搜索quizname）
      * @return 页面信息
      */
+    @ApiOperation("分页获取quiz信息")
     @GetMapping("/get-page")
     public R getByPage(@RequestParam(defaultValue = "1") Integer pageNum,
                         @RequestParam(defaultValue = "3") Integer pageSize,
@@ -60,8 +83,8 @@ public class QuizController {
         }
         // 如果不为空，将question对象列表一起返回
         quizPage.getRecords().forEach((quiz) -> {
-            Object questionData = getQuestionListByQuizId(quiz.getQuizId()).getData();
-            assert StrUtil.equals(questionData.getClass().getName(), "List<Object>");   // TODO 类型申明是否成立？
+            Object questionData = getQuizQuestionById(quiz.getQuizId()).getData();
+            assert StrUtil.equals(questionData.getClass().getName(), List.class.getName());   // TODO 类型申明是否成立？
             quiz.setQuestionObjList((List<Object>) questionData);
         });
         return R.success(quizPage);
@@ -72,14 +95,11 @@ public class QuizController {
      * @param quizId
      * @return question对象列表
      */
-    @GetMapping("/get-question-obj/{quizId}")
-    public R getQuestionListByQuizId(@PathVariable Integer quizId) {
+    @ApiOperation("通过quizId获取quiz包含的题目信息")
+    @GetMapping("/getQuizQuestion/{quizId}")
+    public R getQuizQuestionById(@PathVariable Integer quizId) {
         Quiz quizById = quizService.getById(quizId);
-        //
-        Object questionData = getQuestionListByStrIdList(quizById.getQuestionIdList()).getData();
-        assert StrUtil.equals(questionData.getClass().getName(), "List<Object>");   // TODO 类型申明是否成立？
-        List<Object> questionObjList = (List<Object>) questionData;
-        return R.success(questionObjList);
+        return getQuizQuestion(quizById.getQuestionIdList());
     }
 
     /**
@@ -87,8 +107,9 @@ public class QuizController {
      * @param questionIdList
      * @return question对象
      */
-    @GetMapping("/get-question-obj")
-    public R getQuestionListByStrIdList(@RequestParam String questionIdList) {
+    @ApiOperation("通过String类型的questionIdList，获取题目信息")
+    @GetMapping("/getQuizQuestion")
+    public R getQuizQuestion(@RequestParam String questionIdList) {
         // 从questionIdList中提取题号列表
         int[] questionIds = StrUtil.splitToInt(questionIdList, ",");
         List<Object> questionObjList = new ArrayList<Object>();
@@ -103,11 +124,21 @@ public class QuizController {
         return R.success(questionObjList);
     }
 
+    @ApiOperation("获取quiz包含的所有question的id")
+    @GetMapping("/getQuestionIds")
+    public R<List<Integer>> getQuestionIds(@RequestParam Integer quizId) {
+        Quiz quiz = quizService.getById(quizId);
+        int[] questions = StrUtil.splitToInt(quiz.getQuestionIdList(), ",");
+        List<Integer> questionIds = ListUtil.toList(Arrays.stream(questions).iterator());
+        return R.success(questionIds);
+    }
+
     /**
      * quiz对象持久化
      * @param quiz
      * @return
      */
+    @ApiOperation("quiz信息持久化")
     @PutMapping("/persistence")
     public R persistence(@RequestBody Quiz quiz) {
         if (quiz.getQuestionObjList() != null) {

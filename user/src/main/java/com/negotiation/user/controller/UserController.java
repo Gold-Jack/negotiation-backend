@@ -2,20 +2,25 @@ package com.negotiation.user.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.negotiation.common.util.R;
 import com.negotiation.user.feign.FileFeignService;
+import com.negotiation.user.feign.QuizFeignService;
+import com.negotiation.user.feign.QuizResultFeignService;
 import com.negotiation.user.pojo.User;
 import com.negotiation.user.service.IUserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.IntConsumer;
 
 import static com.negotiation.common.util.ResponseCode.*;
 
@@ -35,6 +40,10 @@ public class UserController {
     private IUserService userService;
     @Autowired
     private FileFeignService fileFeignService;
+    @Autowired
+    private QuizFeignService quizFeignService;
+    @Autowired
+    private QuizResultFeignService quizResultFeignService;
 
     /**
      * 通过ID获取某个用户信息
@@ -64,25 +73,97 @@ public class UserController {
         return R.success(entity);
     }
 
-    /**
-     * 分页读取
-     * @param pageNum 页码
-     * @param pageSize 每页大小
-     * @param search 搜索内容
-     * @return 页面信息
-     */
-    @GetMapping("/get-page")
-    public R getByPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                        @RequestParam(defaultValue = "10") Integer pageSize,
-                        @RequestParam(defaultValue = "") String search) {
-        LambdaQueryWrapper<User> userWrapper = Wrappers.<User>lambdaQuery();
-        if (StrUtil.isNotBlank(search)) {
-            userWrapper.like(User::getUsername, search);
-        }
-        Page<User> userPage = userService.page(new Page<User>(pageNum, pageSize), userWrapper);
-        return userPage != null ?
-                R.success(userPage) : R.error(CODE_311, CODE_311.getCodeMessage());
+    @ApiOperation("通过userId获取用户做完的quiz对象")
+    @GetMapping("/getUserQuiz/{userId}")
+    public R getUserQuizById(@PathVariable Integer userId) {
+        User user = userService.getById(userId);
+        assert ObjectUtil.isNotNull(user);
+        return getUserQuiz(user.getQuizFinishedId());
     }
+
+    /**
+     * 获取用户做完的Quiz对象列表
+     * @return
+     */
+    @ApiOperation("通过quizIdList获取用户做完的quiz对象")
+    @GetMapping("/getUserQuiz")
+    public R getUserQuiz(@RequestParam String quizIdList) {
+        // 如果quizIdList是空的，说明用户没有做完的quiz，直接返回null
+        if (StrUtil.isBlank(quizIdList)) {
+            return R.success(null);
+        }
+        // 从quizIdList中获取Integer类型的quizIds
+        int[] quizDoneId = StrUtil.splitToInt(quizIdList, ",");
+        List<Object> quizDoneList = new ArrayList<>();
+        try {
+            Arrays.stream(quizDoneId).iterator().forEachRemaining(
+                    (IntConsumer) (quizId) -> {
+                        /*
+                        * 通过quizFeignService获取每个quizId对应的quiz信息，并存入quizDoneList
+                        * */
+                        Object quizById = quizFeignService.getById(quizId).getData();
+                        assert ObjectUtil.isNotNull(quizById);
+                        quizDoneList.add(quizById);
+                    }
+            );
+        } catch (Exception e) {
+            return R.error(CODE_100, CODE_100.getCodeMessage().concat("\n" + e.getMessage()));
+        }
+        return R.success(quizDoneList);
+    }
+
+
+    @ApiOperation("通过userId获取用户做完的quiz的result信息")
+    @GetMapping("/getUserResult/{userId}")
+    public R getUserResultById(@PathVariable Integer userId) {
+        User userById = userService.getById(userId);
+        assert ObjectUtil.isNotNull(userById);
+        return getUserResult(userById.getQuizResultId());
+    }
+
+    @ApiOperation("通过resultIdList获取用户做完的quiz的result信息")
+    @GetMapping("/getUserResult")
+    public R getUserResult(@RequestParam String resultIdList) {
+        if (StrUtil.isBlank(resultIdList)) {
+            return R.success(null);
+        }
+        int[] resultIds = StrUtil.splitToInt(resultIdList, ",");
+        List<Object> resultList = new ArrayList<>();
+        try {
+            Arrays.stream(resultIds).iterator().forEachRemaining(
+                    (IntConsumer) (resultId) -> {
+                        /*
+                        * 通过quizResultFeignService由resultId获取result信息，并存入resultList
+                        * */
+                        Object quizResult = quizResultFeignService.getById(resultId).getData();
+                        assert ObjectUtil.isNotNull(quizResult);
+                        resultList.add(quizResult);
+                    }
+            );
+        } catch (Exception e) {
+            return R.error(CODE_100, CODE_100.getCodeMessage().concat("\n" + e.getMessage()));
+        }
+        return R.success(resultList);
+    }
+
+
+    /**
+     * 用户提交答案
+     * 这里假设传入的答案是Map<题号(int), 用户答案(String)>的形式
+     * @return
+     */
+    @ApiOperation("用户答案提交")
+    @PostMapping("/submitAnswer")
+    public R submitAnswer(@RequestParam Integer userId,
+                          @RequestParam Integer quizId,
+                          @RequestBody Map<Integer, String> userAnswer) {
+        /*
+        * TODO 通过AnalysisFeignService分析用户答案，获得用户得分，并更新quizDoneId和quizResult
+        * */
+        return R.error(CODE_100, "方法未完成");
+    }
+
+
 
     /**
      * 用户信息持久化
@@ -123,7 +204,7 @@ public class UserController {
             return R.error(CODE_101, CODE_101.getCodeMessage());
         }
         // 确保upload方法封装的数据是String类型
-        assert StrUtil.equals(uploadResult.getData().getClass().getName(), "String");
+        assert StrUtil.equals(uploadResult.getData().getClass().getName(), String.class.getName());
         // 获取avatarUrl
         String avatarImageUrl = (String) uploadResult.getData();
         // 通过userId获取user信息
@@ -146,18 +227,4 @@ public class UserController {
                 R.success(user) : R.error(CODE_310, CODE_310.getCodeMessage());
     }
 
-//    @PutMapping("/update-col")
-//    public R updateColumn(@RequestBody User user, ) {
-//
-//    }
-
-    /**
-     * 删除 ！！！
-     * @param id 用户ID
-     * @return ！！普通用户没有删除权限！！！
-     */
-    @DeleteMapping("/delete/{id}")
-    public R deleteById(@PathVariable Integer id) {
-        return R.error(CODE_320, CODE_320.getCodeMessage());
-    }
 }

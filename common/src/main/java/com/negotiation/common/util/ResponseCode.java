@@ -23,7 +23,7 @@ public enum ResponseCode {
      *      404 : 404 not found
      */
 
-    CODE_100("未知错误"),
+    CODE_100("系统错误或异常"),
     CODE_101("文件上传失败"),
     CODE_102("文件下载失败"),
 

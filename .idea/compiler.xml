@@ -10,36 +10,21 @@
         <module name="quiz" />
         <module name="file" />
         <module name="question" />
+        <module name="common" />
         <module name="analysis" />
         <module name="user" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="api-gateway" target="18" />
-      <module name="base" target="18" />
-      <module name="facade" target="18" />
-      <module name="gateway" target="13" />
-      <module name="login" target="13" />
-      <module name="security" target="13" />
-      <module name="service" target="13" />
-      <module name="service-analysis" target="18" />
-      <module name="service-negotiation" target="13" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="13" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="analysis" options="-parameters" />
-      <module name="api-gateway" options="-parameters" />
-      <module name="base" options="-parameters" />
       <module name="common" options="-parameters" />
       <module name="file" options="-parameters" />
-      <module name="gateway" options="-parameters" />
-      <module name="login" options="-parameters" />
+      <module name="negotiation-backend" options="-parameters" />
       <module name="question" options="-parameters" />
       <module name="quiz" options="-parameters" />
-      <module name="security" options="-parameters" />
-      <module name="service-analysis" options="-parameters" />
-      <module name="service-negotiation" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
   </component>

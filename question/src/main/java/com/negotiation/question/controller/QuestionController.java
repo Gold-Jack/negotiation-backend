@@ -1,6 +1,7 @@
 package com.negotiation.question.controller;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.negotiation.common.util.R;
 import com.negotiation.question.feign.FileFeignService;
@@ -42,9 +43,37 @@ public class QuestionController {
     @GetMapping("/get/{questionId}")
     public R getById(@PathVariable Integer questionId) {
         Question questionById = questionService.getById(questionId);
-        return R.success(questionById);     // TODO 这里不清楚会有什么Error
+        return R.success(questionById);
     }
 
+    @GetMapping("/getId")
+    public R<Integer> getId(@RequestBody Object question) {
+        assert StrUtil.equals(question.getClass().getName(), Question.class.getName());
+        return R.success(((Question) question).getQuestionId());
+    }
+
+    @GetMapping("/getType/{questionId}")
+    public R<String> getTypeById(@PathVariable Integer questionId) {
+        Question questionById = questionService.getById(questionId);
+        return R.success(questionById.getType());
+    }
+    @GetMapping("/getType")
+    public R<String> getType(@RequestBody Object question) {
+        assert StrUtil.equals(question.getClass().getName(), Question.class.getName());
+        return R.success(((Question) question).getType());
+    }
+
+    @GetMapping("/getRule/{questionId}")
+    public R<String> getRuleById(@PathVariable Integer questionId) {
+        Question questionById = questionService.getById(questionId);
+        return R.success(questionById.getRule());
+    }
+
+    @GetMapping("/getRule")
+    public R<String> getRule(@RequestBody Object question) {
+        assert StrUtil.equals(question.getClass().getName(), Question.class.getName());
+        return R.success(((Question) question).getRule());
+    }
 
     /**
      * 新建question，并存储至数据库
@@ -74,7 +103,7 @@ public class QuestionController {
             return R.error(CODE_101, CODE_101.getCodeMessage());
         }
         // 确保uploadResult返回的是String类型的data
-        assert StrUtil.equals(uploadResult.getData().getClass().getName(), "String");
+        assert StrUtil.equals(uploadResult.getData().getClass().getName(), String.class.getName());
         String questionContentUrl = (String) uploadResult.getData();
 
         // 创建新的question信息
@@ -89,10 +118,5 @@ public class QuestionController {
         return questionService.save(question) ?
                 R.success(question) : R.error(CODE_313, CODE_313.getCodeMessage());
     }
-
-//    @PostMapping(value = "/upload-file-test", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public R uploadFileTest(@RequestPart MultipartFile file) throws IOException {
-//        return fileFeignService.upload(file);
-//    }
 
 }
