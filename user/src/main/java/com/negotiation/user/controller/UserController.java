@@ -4,6 +4,8 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.negotiation.common.util.R;
+import com.negotiation.common.util.TypeParser;
+import com.negotiation.user.feign.AnalysisFeignService;
 import com.negotiation.user.feign.FileFeignService;
 import com.negotiation.user.feign.QuizFeignService;
 import com.negotiation.user.feign.QuizResultFeignService;
@@ -16,10 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.IntConsumer;
 
 import static com.negotiation.common.util.ResponseCode.*;
@@ -44,6 +43,8 @@ public class UserController {
     private QuizFeignService quizFeignService;
     @Autowired
     private QuizResultFeignService quizResultFeignService;
+    @Autowired
+    private AnalysisFeignService analysisFeignService;
 
     /**
      * 通过ID获取某个用户信息
@@ -52,11 +53,8 @@ public class UserController {
      */
     @GetMapping("/get/{userId}")
     public R getById(@PathVariable Integer userId) {
-        User oneById = userService.getById(userId);
-        if (oneById == null) {
-            return R.error(CODE_302, CODE_302.getCodeMessage());
-        }
-        return R.success(oneById);
+        User userById = userService.getById(userId);
+        return R.success(userById);
     }
 
     /**
@@ -66,11 +64,7 @@ public class UserController {
      */
     @GetMapping("/get")
     public R getByEntity(@RequestBody User user) {
-        User entity = userService.getById(user.getUserId());
-        if (entity == null) {
-            return R.error(CODE_302, CODE_302.getCodeMessage());
-        }
-        return R.success(entity);
+        return getById(user.getUserId());
     }
 
     @ApiOperation("通过userId获取用户做完的quiz对象")
@@ -107,7 +101,7 @@ public class UserController {
                     }
             );
         } catch (Exception e) {
-            return R.error(CODE_100, CODE_100.getCodeMessage().concat("\n" + e.getMessage()));
+            return R.error(CODE_100, CODE_100.getCodeMessage().concat(": " + e.getMessage()));
         }
         return R.success(quizDoneList);
     }
@@ -141,7 +135,7 @@ public class UserController {
                     }
             );
         } catch (Exception e) {
-            return R.error(CODE_100, CODE_100.getCodeMessage().concat("\n" + e.getMessage()));
+            return R.error(CODE_100, CODE_100.getCodeMessage().concat(": " + e.getMessage()));
         }
         return R.success(resultList);
     }
@@ -156,11 +150,35 @@ public class UserController {
     @PostMapping("/submitAnswer")
     public R submitAnswer(@RequestParam Integer userId,
                           @RequestParam Integer quizId,
-                          @RequestBody Map<Integer, String> userAnswer) {
+                          @RequestBody Map<String, String> userAnswer) {
         /*
         * TODO 通过AnalysisFeignService分析用户答案，获得用户得分，并更新quizDoneId和quizResult
         * */
-        return R.error(CODE_100, "方法未完成");
+        R analysisResult = analysisFeignService.doAnalysis(quizId, userAnswer);
+        Integer resultId = (Integer) analysisResult.getData();
+        Object result = quizResultFeignService.getById(resultId).getData();
+
+        /*
+        * 更新用户quizFinishedId和quizResultId
+        * */
+        User user = userService.getById(userId);
+        // 更新quizFinishedId
+        HashSet<Integer> quizIdHash = user.getQuizFinishedIdHash();
+        if (!quizIdHash.contains(quizId)) {     // 如果是第一次做当前quiz，则在quizFinishedId中添加当前quizId
+            quizIdHash.add(quizId);
+            user.setQuizFinishedIdHash(quizIdHash);
+        }
+        // 更新quizResultId
+        HashSet<Integer> resultIdHash = user.getQuizResultIdHash();
+        if (resultIdHash.contains(resultId)) {      // 如果发现有相同的resultId，则说明发生了系统性错误，返回error
+            return R.error(CODE_100, CODE_100.getCodeMessage().concat(": resultId重复"));
+        }
+        resultIdHash.add(resultId);     // 如果resultId唯一，则在quizResultId中添加当前resultId
+        user.setQuizResultIdHash(resultIdHash);
+
+        // 更新用户答题信息
+        userService.updateUser(user);
+        return R.success(user);
     }
 
 
@@ -191,7 +209,7 @@ public class UserController {
      * 用户头像上传
      * @param userId 用户ID
      * @param avatarImage 用户头像文件
-     * @return 带有用户头像url的用户对象
+     * @return 用户头像url
      * @throws IOException
      */
     @PostMapping(value = "/upload-avatar-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -212,19 +230,20 @@ public class UserController {
         user.setAvatarUrl(avatarImageUrl);
 
         // 更新带有avatarUrl的user信息
-        return userService.updateById(user) ?
-                R.success(user) : R.error(CODE_311, CODE_311.getCodeMessage());
+        userService.updateById(user);
+
+        // 返回avatarUrl
+        return R.success(user.getAvatarUrl());
     }
 
-    /**
-     * 更新
-     * @param user 新的用户信息
-     * @return 是否更新成功
-     */
-    @PutMapping("/update")
-    public R update(@RequestBody User user) {
-        return userService.updateById(user) ?
-                R.success(user) : R.error(CODE_310, CODE_310.getCodeMessage());
-    }
+//    /**
+//     * 更新
+//     * @param user 新的用户信息
+//     * @return 是否更新成功
+//     */
+//    @PutMapping("/update")
+//    public R updateUser(@RequestBody User user) {
+//        userService.up
+//    }
 
 }

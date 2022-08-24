@@ -1,9 +1,11 @@
 package com.negotiation.user.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
@@ -45,8 +47,16 @@ public class User implements Serializable {
     @ApiModelProperty("已做过的测验ID")
     private String quizFinishedId;
 
+    @ApiModelProperty("已做过的测验ID - 哈希表去重")
+    @TableField(exist = false)
+    private HashSet<Integer> quizFinishedIdHash;
+
     @ApiModelProperty("测验结果ID")
     private String quizResultId;
+
+    @ApiModelProperty("测验结果ID - 哈希表去重")
+    @TableField(exist = false)
+    private HashSet<Integer> quizResultIdHash;
 
     @ApiModelProperty("用户权限")
     private String authority;

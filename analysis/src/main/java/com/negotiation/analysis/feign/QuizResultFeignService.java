@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient("quiz-service")
+@FeignClient(value = "quiz-service", contextId = "quizResultFeignClient")
 public interface QuizResultFeignService {
 
     @ApiOperation("通过resultId获取result信息")

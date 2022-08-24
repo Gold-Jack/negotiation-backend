@@ -6,7 +6,6 @@ import com.negotiation.common.config.security.TokenManager;
 import com.negotiation.common.util.R;
 import com.negotiation.user.pojo.User;
 import com.negotiation.user.service.IUserService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +69,8 @@ public class UserLoginController {
         }
 
         // 向数据库中更新带token的databaseUser信息
-        return userController.update(databaseUser);
+        userService.updateUser(databaseUser);
+        return R.success(databaseUser);
     }
 
     /**
@@ -89,7 +89,7 @@ public class UserLoginController {
         // 添加token信息
         user.setToken(tokenManager.genToken(user.getUsername()));
         // 数据库持久化和规则验证的部分，交给UserController完成
-        return userController.persistence(user);
+        return userController.persistence(user) ;
     }
 
 

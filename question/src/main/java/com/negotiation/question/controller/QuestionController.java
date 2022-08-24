@@ -1,22 +1,22 @@
 package com.negotiation.question.controller;
 
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.negotiation.common.util.R;
 import com.negotiation.question.feign.FileFeignService;
 import com.negotiation.question.pojo.Question;
 import com.negotiation.question.service.IQuestionService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.negotiation.common.util.ResponseCode.*;
+import static com.negotiation.common.util.ResponseCode.CODE_101;
+import static com.negotiation.common.util.ResponseCode.CODE_313;
 
 /**
  * <p>
@@ -46,29 +46,35 @@ public class QuestionController {
         return R.success(questionById);
     }
 
+    @ApiOperation("通过question对象，获取questionId")
     @GetMapping("/getId")
     public R<Integer> getId(@RequestBody Object question) {
         assert StrUtil.equals(question.getClass().getName(), Question.class.getName());
         return R.success(((Question) question).getQuestionId());
     }
 
+    @ApiOperation("通过questionId，获取question的type")
     @GetMapping("/getType/{questionId}")
     public R<String> getTypeById(@PathVariable Integer questionId) {
         Question questionById = questionService.getById(questionId);
         return R.success(questionById.getType());
     }
+
+    @ApiOperation("通过question对象，获取question的type")
     @GetMapping("/getType")
     public R<String> getType(@RequestBody Object question) {
         assert StrUtil.equals(question.getClass().getName(), Question.class.getName());
         return R.success(((Question) question).getType());
     }
 
+    @ApiOperation("通过questionId，获取question的评分标准rule")
     @GetMapping("/getRule/{questionId}")
     public R<String> getRuleById(@PathVariable Integer questionId) {
         Question questionById = questionService.getById(questionId);
         return R.success(questionById.getRule());
     }
 
+    @ApiOperation("通过question对象，获取question的评分标准rule")
     @GetMapping("/getRule")
     public R<String> getRule(@RequestBody Object question) {
         assert StrUtil.equals(question.getClass().getName(), Question.class.getName());
@@ -85,14 +91,16 @@ public class QuestionController {
      * @return question对象
      * @throws IOException 问题内容文件上传时可能产生的Exception
      */
+    @ApiOperation("新增一个question，目前只允许管理员操作")
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public R addQuestion(@RequestParam(defaultValue = "__DEFAULT__") String description,   // 默认无注释
+    public R addQuestion(@RequestParam(defaultValue = "") String description,   // 默认无注释
+                         @RequestParam(defaultValue = "average") String judgingAbility,
                          @RequestParam(defaultValue = "multiple-choice") String type,   // 默认单项选择
                          @RequestParam(defaultValue = "Any") String rule,       // 默认所有答案正确
                          @RequestParam(defaultValue = "ADMIN") String creator,
                          @RequestPart MultipartFile file) throws IOException {
         // 默认值处理
-        if (StrUtil.equals(description, "__DEFAULT__")) {
+        if (StrUtil.isBlank(description)) {
             description = Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[0];
         }
 
@@ -109,6 +117,7 @@ public class QuestionController {
         // 创建新的question信息
         Question question = new Question();
         question.setDescription(description);
+        question.setJudgingAbility(judgingAbility);
         question.setType(type);
         question.setRule(rule);
         question.setCreator(creator);

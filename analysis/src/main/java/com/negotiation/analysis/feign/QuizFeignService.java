@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient("quiz-service")
+@FeignClient(value = "quiz-service", contextId = "quizFeignClient")
 public interface QuizFeignService {
 
     @ApiOperation("通过quizId获取quiz信息")
@@ -32,6 +32,7 @@ public interface QuizFeignService {
     public R getQuizQuestion(@RequestParam String questionIdList);
 
     @ApiOperation("获取quiz包含的所有question的id")
-    @GetMapping("/getQuestionIds")
+    @GetMapping("/quiz/getQuestionIds")
     public R<List<Integer>> getQuestionIds(@RequestParam Integer quizId);
+
 }

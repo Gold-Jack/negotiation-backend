@@ -15,6 +15,21 @@ public class R<T> {
 
     private static final ResponseCode DEFAULT_OK_CODE = CODE_200;
 
+    public R setCode(ResponseCode code) {
+        this.code = code;
+        return this;
+    }
+
+    public R setMsg(String msg) {
+        this.msg = msg;
+        return this;
+    }
+
+    public R setData(T data) {
+        this.data = data;
+        return this;
+    }
+
     public R(T data) {
         this.data = data;
     }
