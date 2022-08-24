@@ -25,7 +25,7 @@ import static com.negotiation.common.util.ResponseCode.CODE_310;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Override
-    public User getById(Integer userId) {
+    public User getUserById(Integer userId) {
         User userById = getById(userId);
         if (userById == null) {
             return null;

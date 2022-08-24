@@ -53,7 +53,7 @@ public class UserController {
      */
     @GetMapping("/get/{userId}")
     public R getById(@PathVariable Integer userId) {
-        User userById = userService.getById(userId);
+        User userById = userService.getUserById(userId);
         return R.success(userById);
     }
 
@@ -70,7 +70,7 @@ public class UserController {
     @ApiOperation("通过userId获取用户做完的quiz对象")
     @GetMapping("/getUserQuiz/{userId}")
     public R getUserQuizById(@PathVariable Integer userId) {
-        User user = userService.getById(userId);
+        User user = userService.getUserById(userId);
         assert ObjectUtil.isNotNull(user);
         return getUserQuiz(user.getQuizFinishedId());
     }
@@ -110,7 +110,7 @@ public class UserController {
     @ApiOperation("通过userId获取用户做完的quiz的result信息")
     @GetMapping("/getUserResult/{userId}")
     public R getUserResultById(@PathVariable Integer userId) {
-        User userById = userService.getById(userId);
+        User userById = userService.getUserById(userId);
         assert ObjectUtil.isNotNull(userById);
         return getUserResult(userById.getQuizResultId());
     }
@@ -161,7 +161,7 @@ public class UserController {
         /*
         * 更新用户quizFinishedId和quizResultId
         * */
-        User user = userService.getById(userId);
+        User user = userService.getUserById(userId);
         // 更新quizFinishedId
         HashSet<Integer> quizIdHash = user.getQuizFinishedIdHash();
         if (!quizIdHash.contains(quizId)) {     // 如果是第一次做当前quiz，则在quizFinishedId中添加当前quizId
@@ -226,7 +226,7 @@ public class UserController {
         // 获取avatarUrl
         String avatarImageUrl = (String) uploadResult.getData();
         // 通过userId获取user信息
-        User user = userService.getById(userId);
+        User user = userService.getUserById(userId);
         user.setAvatarUrl(avatarImageUrl);
 
         // 更新带有avatarUrl的user信息

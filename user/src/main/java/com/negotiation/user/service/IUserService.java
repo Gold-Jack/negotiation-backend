@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  */
 public interface IUserService extends IService<User> {
 
-    public User getById(Integer userId);
+    public User getUserById(Integer userId);
 
     public boolean updateUser(User user);
 }
