@@ -4,7 +4,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.negotiation.common.util.R;
-import com.negotiation.common.util.TypeParser;
 import com.negotiation.user.feign.AnalysisFeignService;
 import com.negotiation.user.feign.FileFeignService;
 import com.negotiation.user.feign.QuizFeignService;
