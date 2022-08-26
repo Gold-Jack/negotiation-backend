@@ -7,14 +7,15 @@ import com.baidubce.model.ApiExplorerRequest;
 import com.baidubce.model.ApiExplorerResponse;
 import com.negotiation.common.exception.BaiduAccessTokenNotFoundException;
 import com.negotiation.common.util.CommonUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BaiduAccessToken {
 
     private static final String APPLICATION_NAME = "NLP_test";
-    private static final String API_KEY = "DZyBVo0Dlow6DkbLOrKilSCF";
-    private static final String SECRET_KEY = "s9rXubq5G4GzqS1jW7SPb9eSOBKzfzmM";
+    private static final String API_KEY = "Z6f2OYjEGzpZAIiUrIcv9IBY";
+    private static final String SECRET_KEY = "nGoQAg1wzi8EUCXC5Mpswn8E2e2D1Uvc";
     private static final String GRANT_TYPE = "client_credentials";
 
     private static final String ACCESS_TOKEN = "access_token";
@@ -51,5 +52,11 @@ public class BaiduAccessToken {
             throw new BaiduAccessTokenNotFoundException();
         }
         return access_token;
+    }
+
+    @ApiOperation("默认的access_token")
+    public static String jackAccessToken() {
+        final String access_token_jack = "24.b9ac22b571e4ce4717af4d822898b5df.2592000.1664099444.282335-27176563";
+        return access_token_jack;
     }
 }

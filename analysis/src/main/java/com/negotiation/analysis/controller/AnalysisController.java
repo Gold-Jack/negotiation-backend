@@ -3,6 +3,7 @@ package com.negotiation.analysis.controller;
 import cn.hutool.core.util.StrUtil;
 import com.negotiation.analysis.feign.QuestionFeignService;
 import com.negotiation.analysis.feign.QuizFeignService;
+import com.negotiation.analysis.model.baidubce.LexicalAnalysis;
 import com.negotiation.common.util.R;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,4 +43,10 @@ public class AnalysisController {
         final Integer resultId = 1001;
         return R.success(resultId);
     }
+
+//    @ApiOperation("配合postman进行编码测试")
+//    @GetMapping("/encodingTest")
+//    public R encodingTest() {
+//        return R.success(LexicalAnalysis.analyze().getResult());
+//    }
 }

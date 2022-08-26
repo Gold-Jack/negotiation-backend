@@ -1,26 +1,24 @@
 package com.negotiation.analysis.model.baidubce;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baidubce.http.ApiExplorerClient;
 import com.baidubce.http.HttpMethodName;
 import com.baidubce.model.ApiExplorerRequest;
 import com.baidubce.model.ApiExplorerResponse;
 import com.negotiation.common.util.CommonUtil;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.stereotype.Component;
+import org.checkerframework.common.value.qual.IntRange;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
-public class LexicalAnalysis {
+public class ShortTextSimilarity {
 
-//    private static final String access_token_jack = "24.40a1d8991c3a07c9ff7609dad5d74a02.2592000.1664080023.282335-26369435";
-
-    @ApiOperation("词法分析")
-    public static ApiExplorerResponse analyze(String text) {
-        String path = "https://aip.baidubce.com/rpc/2.0/nlp/v1/lexer";
+    @ApiOperation("对两个短文本做相似度分析")
+    public static Double analyze(String text_1, String text_2) {
+        String path = "https://aip.baidubce.com/rpc/2.0/nlp/v2/simnet";
         ApiExplorerRequest request = new ApiExplorerRequest(HttpMethodName.POST, path);
 
 
@@ -28,26 +26,28 @@ public class LexicalAnalysis {
         request.addHeaderParameter("Content-Type", "application/json;charset=UTF-8");
 
         // 设置query参数
-//        String access_token = BaiduAccessToken.getToken();    // 如果使用者不是jack，请使用getToken生成accesstoken
         request.addQueryParameter("access_token", BaiduAccessToken.jackAccessToken());
         request.addQueryParameter("charset", "UTF-8");
 
+
         // 设置jsonBody参数
-        Map<String, Object> map = new HashMap<>();
-        map.put("text", text);
-        JSON json = new JSONObject(map);
-        String jsonBody = json.toJSONString();
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("text_1", text_1);
+        jsonMap.put("text_2", text_2);
+        String jsonBody = new JSONObject(jsonMap).toString();
         request.setJsonBody(jsonBody);
 
         ApiExplorerClient client = new ApiExplorerClient();
 
         ApiExplorerResponse response = new ApiExplorerResponse();
         try {
-            // 返回Json字符串
-            response = client.sendRequest(request);
+            // 返回结果格式为Json字符串
+             response = client.sendRequest(request);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return response;
+        String scoreStr = CommonUtil.baiduJsonToMap(response).get("score");
+        double similarityScore = Double.parseDouble(scoreStr);
+        return similarityScore;
     }
 }

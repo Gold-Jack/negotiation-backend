@@ -44,6 +44,8 @@ public class CommonUtil {
 //                keyAndValue.replaceAll(string -> removeChar(string, CharUtil.DOUBLE_QUOTES));
                 map.put(keyAndValue.get(0), keyAndValue.get(1));
             } else {
+//                int lastIndex = keyAndValue.size() - 1;
+//                map.put(keyAndValue.get(lastIndex-1), keyAndValue.get(lastIndex));
                 System.out.println("*有歧义的键值对：" + keyAndValue);
             }
         });
@@ -84,4 +86,13 @@ public class CommonUtil {
         }
         return resString;
     }
+
+    @ApiOperation("移除String中所有特定字符")
+    public static String removeAllChar(String string, Collection<Character> tgtChars) {
+        for (Character tgtChar : tgtChars) {
+            string = CommonUtil.removeChar(string, tgtChar);
+        }
+        return string;
+    }
+
 }

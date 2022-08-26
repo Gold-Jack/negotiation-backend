@@ -2,12 +2,15 @@
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/analysis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/analysis/src/test/java/com/negotiation/analysis/BaidubceApplicationTest.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/file/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/file/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/question/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/quiz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/user/src/main/java" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
