@@ -1,15 +1,18 @@
 package com.negotiation.quiz.controller;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.negotiation.common.util.R;
 import com.negotiation.quiz.pojo.QuizResult;
 import com.negotiation.quiz.service.IQuizResultService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
+import java.util.Map;
 
 /**
  * <p>
@@ -33,4 +36,24 @@ public class QuizResultController {
         QuizResult quizResultById = quizResultService.getById(resultId);
         return R.success(quizResultById);
     }
+
+    @ApiOperation("创建一条新的quizResult记录，并存入数据库")
+    @PostMapping("/persistence")
+    public R<Integer> persistence(@RequestParam Integer quizId,
+                         @RequestParam Map<String, Double> scoreByAbility) {
+        // 设置quizResult的各项参数
+        QuizResult quizResult = new QuizResult();
+        // TODO 这种resultId生成方式是否合法
+        quizResult.setResultId(Integer.valueOf(IdUtil.fastSimpleUUID()));
+        quizResult.setQuizId(quizId);
+        quizResult.setExpressionAbility(scoreByAbility.get("expression-ability"));
+        quizResult.setObservationAbility(scoreByAbility.get("observation-ability"));
+        quizResult.setNegotiationAbility(scoreByAbility.get("negotiation-ability"));
+        quizResult.setGmtCreate(new Date());
+        quizResult.setGmtModified(quizResult.getGmtCreate());
+
+        quizResultService.save(quizResult);
+        return R.success(quizResult.getResultId());
+    }
+
 }

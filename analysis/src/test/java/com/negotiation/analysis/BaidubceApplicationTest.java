@@ -52,6 +52,6 @@ public class BaidubceApplicationTest {
     public void encodingTest() {
         System.out.println(System.getProperty("file.encoding"));
 //        System.out.println(System.getProperty("console.encoding"));
-        System.out.println("空的，中文乱码");
+        System.out.println("中文乱码测试");
     }
 }

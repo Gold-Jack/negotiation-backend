@@ -9,6 +9,7 @@ import com.negotiation.common.exception.BaiduAccessTokenNotFoundException;
 import com.negotiation.common.util.CommonUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Component
 public class BaiduAccessToken {

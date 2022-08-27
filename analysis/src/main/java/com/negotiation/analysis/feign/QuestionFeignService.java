@@ -1,6 +1,7 @@
 package com.negotiation.analysis.feign;
 
 import com.negotiation.common.util.R;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,10 @@ public interface QuestionFeignService {
 
     @GetMapping("/question/getRule")
     public R<String> getRule(@RequestBody Object question);
+
+    @ApiOperation("通过questionId获取judgingAbility")
+    @GetMapping("/getJudgingAbility/{questionId}")
+    public R<String> getJudgingAbility(@PathVariable Integer questionId);
 
     @PostMapping(value = "/question/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public R addQuestion(@RequestParam(defaultValue = "") String description,   // 默认无注释

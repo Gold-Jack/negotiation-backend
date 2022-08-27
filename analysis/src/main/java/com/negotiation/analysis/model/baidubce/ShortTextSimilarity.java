@@ -10,10 +10,13 @@ import com.negotiation.common.util.CommonUtil;
 import io.swagger.annotations.ApiOperation;
 import org.checkerframework.common.value.qual.IntRange;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class ShortTextSimilarity {
 
     @ApiOperation("对两个短文本做相似度分析")

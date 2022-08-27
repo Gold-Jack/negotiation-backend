@@ -81,6 +81,20 @@ public class QuestionController {
         return R.success(((Question) question).getRule());
     }
 
+    @ApiOperation("通过questionId获取judgingAbility")
+    @GetMapping("/getJudgingAbility/{questionId}")
+    public R<String> getJudgingAbility(@PathVariable Integer questionId) {
+        Question questionById = questionService.getById(questionId);
+        return R.success(questionById.getJudgingAbility());
+    }
+
+//    @ApiOperation("获取Question类的反射")
+//    @GetMapping("/getClassEntity")
+//    public R<Class<?>> getClassEntity() {
+//        return R.success(Question.class);
+//    }
+
+
     /**
      * 新建question，并存储至数据库
      * @param description 问题描述
