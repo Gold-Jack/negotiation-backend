@@ -5,8 +5,11 @@ import com.negotiation.user.pojo.User;
 import com.negotiation.user.mapper.UserMapper;
 import com.negotiation.user.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * <p>
@@ -44,4 +47,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setQuizResultId(CommonUtil.hashToString(user.getQuizResultIdHash()));
         return updateById(user);
     }
+
 }

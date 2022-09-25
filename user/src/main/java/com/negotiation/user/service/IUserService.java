@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * <p>
  * 用户信息表 服务类
@@ -18,4 +20,5 @@ public interface IUserService extends IService<User> {
     public User getUserById(Integer userId);
 
     public boolean updateUser(User user);
+
 }

@@ -4,22 +4,21 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baidubce.model.ApiExplorerResponse;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.CharSet;
-import org.apache.commons.lang3.CharSetUtils;
 
 import java.util.*;
 
 public class CommonUtil {
 
-    @ApiOperation("将逗号隔开的String转换为HashSet")
+    @ApiOperation("将逗号隔开的String转换为HashSet<Integer>")
     public static HashSet<Integer> stringToHash(String commaSplitString) {
+        commaSplitString = commaSplitString.replaceAll("，", StrUtil.COMMA); // 中文逗号转英文逗号
         HashSet<Integer> hashSet = Arrays.stream(
                 StrUtil.splitToInt(commaSplitString.strip(), StrUtil.COMMA))
                 .collect(HashSet::new, HashSet::add, HashSet::addAll);
         return hashSet;
     }
 
-    @ApiOperation("将HashSet转换为逗号隔开的String")
+    @ApiOperation("将HashSet转换为逗号隔开的String<Integer>")
     public static String hashToString(HashSet<Integer> hashSet) {
         String commaSplitString = StrUtil.EMPTY;
         for (Integer i : hashSet) {
@@ -29,6 +28,7 @@ public class CommonUtil {
         commaSplitString = commaSplitString.substring(1);
         return commaSplitString;
     }
+
 
     @ApiOperation("百度api返回Json转Map")
     public static Map<String, String> baiduJsonToMap(ApiExplorerResponse response) {

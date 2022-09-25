@@ -41,4 +41,5 @@ public class TokenApplicationTest {
         admin = userService.getById(1);
         System.out.println("after = " + admin);
     }
+
 }

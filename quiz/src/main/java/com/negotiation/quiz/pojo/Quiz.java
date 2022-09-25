@@ -1,6 +1,7 @@
 package com.negotiation.quiz.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.util.Date;
@@ -42,6 +43,7 @@ public class Quiz implements Serializable {
     @ApiModelProperty("题目ID列表")
     private String questionIdList;
 
+    @TableField(exist = false)
     @ApiModelProperty("题目对象列表（不存入数据库）")
     private List<Object> questionObjList;
 

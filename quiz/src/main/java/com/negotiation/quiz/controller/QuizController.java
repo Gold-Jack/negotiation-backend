@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.negotiation.common.util.CommonUtil;
 import com.negotiation.common.util.R;
 import com.negotiation.quiz.feign.QuestionFeignService;
 import com.negotiation.quiz.pojo.Quiz;
@@ -44,7 +45,19 @@ public class QuizController {
         if (quizById == null) {
             return R.error(CODE_311, CODE_311.getCodeMessage());
         }
+        List<Object> questionObjList = new ArrayList<>();
+        CommonUtil.stringToHash(quizById.getQuestionIdList())
+                .stream().iterator().forEachRemaining((id) -> {
+                    questionObjList.add(getQuizQuestionById(id).getData());
+                });
+        quizById.setQuestionObjList(questionObjList);
         return R.success(quizById);
+    }
+
+    @ApiOperation("获取单个quiz的具体信息（前端调用）")
+    @GetMapping("/getQuizDetail")
+    public R getQuizDetail(@RequestParam Integer quizId) {
+        return getById(quizId);
     }
 
     @ApiOperation("获取所有已发布的quiz")

@@ -1,14 +1,11 @@
 package com.negotiation.analysis.controller;
 
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.negotiation.analysis.feign.QuestionFeignService;
 import com.negotiation.analysis.feign.QuizFeignService;
 import com.negotiation.analysis.feign.QuizResultFeignService;
-import com.negotiation.analysis.model.Analyzer;
 import com.negotiation.analysis.model.MultipleChoiceAnalyzer;
 import com.negotiation.analysis.model.TextAnalyzer;
-import com.negotiation.analysis.model.baidubce.LexicalAnalysis;
 import com.negotiation.common.util.QuestionType;
 import com.negotiation.common.util.R;
 import io.swagger.annotations.ApiOperation;
@@ -16,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.negotiation.common.util.ResponseCode.CODE_100;
 

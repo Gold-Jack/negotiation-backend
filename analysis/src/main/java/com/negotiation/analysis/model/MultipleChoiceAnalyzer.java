@@ -15,7 +15,7 @@ public class MultipleChoiceAnalyzer implements Analyzer{
     public static Double simpleAnalyze(String correctChoice, String userChoice) {
         correctChoice = correctChoice.toUpperCase(Locale.ENGLISH).strip();
         userChoice = userChoice.toUpperCase(Locale.ENGLISH).strip();
-        // 申明答案和用户作答的选项均为一个
+        // 申明答案和用户作答的选项的数量均为1
         assert correctChoice.length() == 1 && userChoice.length() == 1;
         if (StrUtil.equals(correctChoice, userChoice)) {
             return FULL_SCORE;
